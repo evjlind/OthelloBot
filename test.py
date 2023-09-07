@@ -1,27 +1,16 @@
+import numpy as np
 import functools
 
-import gymnasium as gym
-import numpy as np
-from gymnasium.spaces import box, discrete
-from gymnasium.utils import EzPickle
+class Othello():
+    metadata = {"render_modes": ["human"], "name": "othelloEnv_v1"}
 
-from pettingzoo import AECEnv
-from pettingzoo.utils import agent_selector, wrappers
-
-class CustomEnvironment(AECEnv):
-    metadata = {
-        "name": "custom_environment_v0",
-    }
-
-
-    def __init__(self):
+    def __init__(self,render_mode=None):
         global board, winner
         self.possible_agents = ["player_"+ str(r) for r in range(2)]
         self.agent_name_mapping = dict(
             zip(self.possible_agents, list(range(len(self.possible_agents))))
         )
         
-        self.action_spaces = box(low=0,high=7,shape=(8,8), dtype=np.float32)
         board = np.zeros((8,8),dtype=int)
         board[3][3]=1
         board[3][4]=2
@@ -29,7 +18,9 @@ class CustomEnvironment(AECEnv):
         board[4][4]=1
         winner = False
 
-    def reset(self, seed=None, options=None):
+        self.render_mode = render_mode
+
+    def reset(self):
         global board, legal_moves, winner
         board = np.zeros((8,8),dtype=int)
         board[3][3]=1
@@ -40,20 +31,11 @@ class CustomEnvironment(AECEnv):
         winner = False
         return 0
 
-    def step(self, actions, player):
+    def move(self, action, player):
         global board
-        board[actions[0],actions[1]] = player
+        board[action[0],action[1]] = player
         return 0
 
-    def render(self):
-        pass
-
-    def observation_space(self, agent):
-        return self.observation_spaces[agent]
-
-    def action_space(self, agent):
-        return self.action_spaces[agent]
-    
     def _legal_moves(self,player):
         global board, winner
         coords = [(i,j) for i in range(8) for j in range(8) if board[i][j] == player]
@@ -154,3 +136,10 @@ class CustomEnvironment(AECEnv):
         if len(legal_moves==0):
             winner = True
         return legal_moves
+    
+    def print_board():
+        global board
+        for i in range(8):
+            print("\n")
+            for j in range(8):
+                print(board[i][j],end="")
