@@ -1,5 +1,3 @@
-from test import Othello
+from Othello.othello import OthelloEnv
 
-board = Othello.__init__(Othello)
-
-Othello.print_board()
+board = OthelloEnv.__init__(OthelloEnv)
