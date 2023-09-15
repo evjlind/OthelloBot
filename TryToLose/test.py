@@ -4,7 +4,7 @@ import time
 
 def minimax(board):
     if not TicTacToe.playing(board):
-        return score(board)
+        return TicTacToe.score(board)
     if np.sum(board) == 0:
         player = 1
     else:
