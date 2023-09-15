@@ -1,60 +1,45 @@
 from tictactoe import TicTacToe
 import numpy as np
+import time
 
-def get_best_move(player, board):
+def minimax(board):
+    if not TicTacToe.playing(board):
+        return score(board)
+    if np.sum(board) == 0:
+        player = 1
+    else:
+        player = -1
+    scores = []
+    moves = []
+    bufferBoard = board
     moves = TicTacToe.get_all_moves(board)
-    checking = 0
-    good_moves = []
-    drawable = False
-    while checking < len(moves):
-        bufferBoard = board
-        currentMove = moves[checking]
-        bufferBoard[currentMove[0]][currentMove[1]] = player
-        print("checking move: " + str(checking) + " for " + str(player))
-        if playing(bufferBoard):
-            bufferBoard = make_move(-player,bufferBoard)
-        else:
-            if TicTacToe.has_won(bufferBoard,-player):
-                good_moves.append(currentMove)
-                checking = checking + 1
-            elif TicTacToe.has_drawn(bufferBoard):
-                bufferMove = currentMove
-                checking = checking + 1
-                drawable = True
-            elif drawable:
-                checking = checking + 1
-            else:
-                bufferMove = currentMove
-                checking = checking + 1
-    if len(good_moves)>0:
-        return good_moves
-    else:
-        return bufferMove
+    for i in moves:
+        bufferBoard[i[0]][i[1]] = player
+        scores.append(minimax(bufferBoard))
+        bufferBoard[i[0]][i[1]] = 0
+    return max(scores) if player == 1 else min(scores)
 
-def playing(board):
+
+def score(board):
     if TicTacToe.has_won(board, 1):
-        return False
+        return -1
     elif TicTacToe.has_won(board,-1):
-        return False
+        return 1
     elif TicTacToe.has_drawn(board):
-        return False
-    else:
-        return True
-
-def make_move(player,board):
-    moves = get_best_move(player,board)
-    if type(moves) == list:
-        move_ind = np.random.randint(0,len(moves)-1)
-        move = moves[move_ind]
-    else:
-        move = moves
-    row = move[0]
-    col = move[1]
-    board[row][col] = player
-    return board
+        return 0
 
 board = TicTacToe.__init__()
-player = 1
-while (playing(board)):
-    board = make_move(player,board)
-    player = -player
+
+
+result = minimax(board)
+playing = 1
+while TicTacToe.playing(board):
+    human = input("human play 1 or -1")
+    if human == playing:
+        row = int(input('move row'))
+        col = int(input('move col'))
+        board[row][col] = human
+    else:
+        moves = TicTacToe.get_all_moves(board)
+        choice = minimax(board)
+        moves[choice.index(c)]
