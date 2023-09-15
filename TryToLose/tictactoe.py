@@ -67,3 +67,11 @@ class TicTacToe():
             return False
         else:
             return True
+        
+    def score(board):
+        if TicTacToe.has_won(board, 1):
+            return -1
+        elif TicTacToe.has_won(board,-1):
+            return 1
+        elif TicTacToe.has_drawn(board):
+            return 0

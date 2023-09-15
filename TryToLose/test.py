@@ -17,29 +17,28 @@ def minimax(board):
         bufferBoard[i[0]][i[1]] = player
         scores.append(minimax(bufferBoard))
         bufferBoard[i[0]][i[1]] = 0
-    return max(scores) if player == 1 else min(scores)
-
-
-def score(board):
-    if TicTacToe.has_won(board, 1):
-        return -1
-    elif TicTacToe.has_won(board,-1):
-        return 1
-    elif TicTacToe.has_drawn(board):
-        return 0
+    return scores.index(max(scores)) if player == 1 else min(scores)
 
 board = TicTacToe.__init__()
 
-
-result = minimax(board)
+print(board)
+human = int(input("human play 1 or -1"))
+print(human)
+#result = minimax(board)
 playing = 1
 while TicTacToe.playing(board):
-    human = input("human play 1 or -1")
     if human == playing:
-        row = int(input('move row'))
-        col = int(input('move col'))
-        board[row][col] = human
+        row = (input('move row'))
+        col = (input('move col'))
+        board[int(row)][int(col)] = human
+        playing = -int(playing)
+        print(board)
     else:
+        print('ai move')
         moves = TicTacToe.get_all_moves(board)
         choice = minimax(board)
-        moves[choice.index(c)]
+        ai_move = moves[choice]
+        board[ai_move[0]][ai_move[1]] = -human
+        playing = -playing
+        print(board)
+print(TicTacToe.score(board))
