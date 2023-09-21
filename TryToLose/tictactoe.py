@@ -41,20 +41,12 @@ class TicTacToe():
                     moves.append((i,j))
         return moves
     
-    def game_over(board):
+    def has_drawn(board):
         for i in board:
             for j in i:
                 if j == 0:
                     return False
         return True
-    
-    def has_drawn(board):
-        if (not TicTacToe.has_won(board,1)) and (not TicTacToe.has_won(board,-1)):
-            for i in board:
-                for j in i:
-                    if j == 0:
-                        return False
-            return True
     
     def playing(board):
         if TicTacToe.has_won(board,1):
@@ -62,8 +54,6 @@ class TicTacToe():
         elif TicTacToe.has_won(board,-1):
             return False
         elif TicTacToe.has_drawn(board):
-            return False
-        elif TicTacToe.game_over(board):
             return False
         else:
             return True

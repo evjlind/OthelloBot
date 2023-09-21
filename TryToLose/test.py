@@ -1,29 +1,36 @@
 from tictactoe import TicTacToe
-import numpy as np
-import time
 
-def minimax(board,maximizing):
-    if not TicTacToe.playing(board):
+def minimax(board,turn,depth):
+    if not TicTacToe.playing(board): #defines leaf node
+        print('leaf')
+        print(board)
+        print(TicTacToe.score(board))
         return TicTacToe.score(board)
-    if np.sum(board) == 0:
-        player = 1
-    else:
-        player = -1
-    scores = []
-    moves = []
-    bufferBoard = board
     moves = TicTacToe.get_all_moves(board)
-    for i in moves:
-        bufferBoard[i[0]][i[1]] = player
-        scores.append(minimax(bufferBoard,-maximizing))
-        bufferBoard[i[0]][i[1]] = 0
-    return scores.index(min(scores)) if maximizing == 1 else max(scores)
+    new_boards = []
+    for i in range((len(moves))):
+        bufferBoard = board
+        bufferBoard[moves[i][0]][moves[i][1]] = turn
+        new_boards.append(bufferBoard)
+    print(moves)
+    bufferBoard = board
+    if turn == 1:
+        score = -2
+        for i in range(len(new_boards)):
+            score = max(score,minimax(new_boards[i],-turn,depth+1))
+    else:
+        score = 2
+        for i in range(len(new_boards)):
+            score = min(score,minimax(new_boards[i],-turn,depth+1))
+            bufferBoard = board
+    if depth == 0:    
+        return score
 
 board = TicTacToe.__init__()
 
-print(board)
 human = int(input("human play 1 or -1"))
 playing = 1
+depth = 0
 while TicTacToe.playing(board):
     if human == playing:
         row = (input('move row'))
@@ -32,9 +39,8 @@ while TicTacToe.playing(board):
         playing = -int(playing)
         print(board)
     else:
-        print('ai move')
         moves = TicTacToe.get_all_moves(board)
-        choice = minimax(board,-human)
+        choice = minimax(board,-human,depth)
         ai_move = moves[choice]
         board[ai_move[0]][ai_move[1]] = -human
         playing = -playing
