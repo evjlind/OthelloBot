@@ -2,7 +2,7 @@ from tictactoe import TicTacToe
 import numpy as np
 import time
 
-def minimax(board):
+def minimax(board,maximizing):
     if not TicTacToe.playing(board):
         return TicTacToe.score(board)
     if np.sum(board) == 0:
@@ -15,16 +15,14 @@ def minimax(board):
     moves = TicTacToe.get_all_moves(board)
     for i in moves:
         bufferBoard[i[0]][i[1]] = player
-        scores.append(minimax(bufferBoard))
+        scores.append(minimax(bufferBoard,-maximizing))
         bufferBoard[i[0]][i[1]] = 0
-    return scores.index(max(scores)) if player == 1 else min(scores)
+    return scores.index(min(scores)) if maximizing == 1 else max(scores)
 
 board = TicTacToe.__init__()
 
 print(board)
 human = int(input("human play 1 or -1"))
-print(human)
-#result = minimax(board)
 playing = 1
 while TicTacToe.playing(board):
     if human == playing:
@@ -36,7 +34,7 @@ while TicTacToe.playing(board):
     else:
         print('ai move')
         moves = TicTacToe.get_all_moves(board)
-        choice = minimax(board)
+        choice = minimax(board,-human)
         ai_move = moves[choice]
         board[ai_move[0]][ai_move[1]] = -human
         playing = -playing
