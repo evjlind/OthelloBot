@@ -1,5 +1,4 @@
 import numpy as np
-import functools
 
 class Othello():
     metadata = {"render_modes": ["human"], "name": "othelloEnv_v1"}

@@ -25,6 +25,7 @@ while ttt.playing(board):
                 print("select a valid move")
         print(board)
     else:
+        print("Agent move:")
         all_moves = ttt.get_all_moves(board)
         scores = np.empty(len(all_moves))
         for move in range(len(all_moves)):
@@ -33,8 +34,12 @@ while ttt.playing(board):
             index = np.where(scores == np.max(scores))
         else:
             index = np.where(scores == np.min(scores))
+        row = all_moves[index[0][0]][0]
+        col = all_moves[index[0][0]][1]
+        print((row,col))
         board[all_moves[index[0][0]][0]][all_moves[index[0][0]][1]] = turn
         turn = -turn
+        print(board)
 
 if ttt.score(board) == human:
     print("Human wins!")
