@@ -11,8 +11,6 @@ Empty = 0
 
 import numpy as np
 
-board = np.array([[0,0,0],[0,0,0],[0,0,0]])
-
 class TicTacToe():
     def __init__():
         board = np.array([[0,0,0],[0,0,0],[0,0,0]])
@@ -65,3 +63,15 @@ class TicTacToe():
             return 1
         elif TicTacToe.has_drawn(board):
             return 0
+        
+    def disp_board(board):
+        disp = np.empty_like(board,dtype=str)
+        for i in range(board.shape[0]):
+            for j in range(board.shape[1]):
+                if board[i][j] == 0:
+                    disp[i][j] = '_'
+                if board[i][j] == 1:
+                    disp[i][j] = 'X'
+                if board[i][j] == -1:
+                    disp[i][j] = 'O'
+        print(disp)
