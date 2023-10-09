@@ -1,5 +1,4 @@
 from tictactoe import TicTacToe
-import numpy as np
 import math
 
 class agent():
