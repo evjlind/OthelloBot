@@ -4,6 +4,7 @@
 #include<stdlib.h>
 #include "othello.h"
 
+// could represent a board as 128 bit binary sequence but doing this for now
 struct board* new_board(){
     unsigned long long white = INIT_BOARD_WHITE;
     unsigned long long black = INIT_BOARD_BLACK;
@@ -45,7 +46,17 @@ unsigned long long shift_d_l(unsigned long long board){
     return shift_d(shift_l(board));
 }
 
-unsigned long long generate_moves(unsigned long long self, unsigned long long op){
+unsigned long long generate_moves(struct board *board,int player){
+    unsigned long long self;
+    unsigned long long op;
+    if (player==1){
+        self = board->black;
+        op = board->white;
+    }
+    else{
+        self = board->white;
+        op = board->black;
+    }
     unsigned long long moves = 0;
     unsigned long long open = ~(self|op);
     unsigned long long captured;
@@ -109,10 +120,11 @@ unsigned long long generate_moves(unsigned long long self, unsigned long long op
     return moves;
 }
 
-struct board* make_move(unsigned long long move, struct board *board){
-    int turn;
+struct board* make_move(unsigned long long move, struct board *board, unsigned long long legalMoves){
+    int turn = board->turn;
     unsigned long long self, op;
-    struct board *new_board;
+    unsigned long long captured;
+    unsigned long long overlap = move&legalMoves;
     if (turn % 2 == 0){
         self = board->black;
         op = board->white;
@@ -122,92 +134,100 @@ struct board* make_move(unsigned long long move, struct board *board){
         op = board->black;
     }
 
-    unsigned long long captured;
-
-    self |= move;
-    captured = shift_u(move)&op;
-    for (int i=0;i<5;i++){
-        captured |= shift_u(captured)&op;
-    }
-    if (shift_u(captured)&self!=0){
+    if (overlap>0){
+        self |= move;
+        captured = shift_u(move)&op;
+        printf("\n%llu",self);
+        printf("\n%llu\n",op);
+        for (int i=0;i<5;i++){
+            captured |= shift_u(captured)&op;
+        }
+        // if (shift_u(captured)&self!=0){
         self |= captured;
         op &= ~captured;
-    }
+        // }
 
-    captured = shift_d(move)&op;
-    for (int i=0;i<5;i++){
-        captured |= shift_d(captured)&op;
-    }
-    if (shift_d(captured)&self!=0){
+        captured = shift_d(move)&op;
+        for (int i=0;i<5;i++){
+            captured |= shift_d(captured)&op;
+        }
+        // if (shift_d(captured)&self!=0){
         self |= captured;
         op &= ~captured;
-    }
+        // }
 
-    captured = shift_r(move)&op;
-    for (int i=0;i<5;i++){
-        captured |= shift_r(captured)&op;
-    }
-    if (shift_r(captured)&self!=0){
+        captured = shift_r(move)&op;
+        for (int i=0;i<5;i++){
+            captured |= shift_r(captured)&op;
+        }
+        // if (shift_r(captured)&self!=0){
         self |= captured;
         op &= ~captured;
-    }
+        // }
 
-    captured = shift_l(move)&op;
-    for (int i=0;i<5;i++){
-        captured |= shift_l(captured)&op;
-    }
-    if (shift_l(captured)&self!=0){
+        captured = shift_l(move)&op;
+        for (int i=0;i<5;i++){
+            captured |= shift_l(captured)&op;
+        }
+        // if (shift_l(captured)&self!=0){
         self |= captured;
         op &= ~captured;
-    }
+        // }
 
 
-    captured = shift_u_r(move)&op;
-    for (int i=0;i<5;i++){
-        captured |= shift_u_r(captured)&op;
-    }
-    if (shift_u_r(captured)&self!=0){
+        captured = shift_u_r(move)&op;
+        for (int i=0;i<5;i++){
+            captured |= shift_u_r(captured)&op;
+        }
+        // if (shift_u_r(captured)&self!=0){
         self |= captured;
         op &= ~captured;
-    }
+        // }
 
-    captured = shift_u_l(move)&op;
-    for (int i=0;i<5;i++){
-        captured |= shift_u_l(captured)&op;
-    }
-    if (shift_u_l(captured)&self!=0){
+        captured = shift_u_l(move)&op;
+        for (int i=0;i<5;i++){
+            captured |= shift_u_l(captured)&op;
+        }
+        // if (shift_u_l(captured)&self!=0){
         self |= captured;
         op &= ~captured;
-    }
+        // }
 
-    captured = shift_d_r(move)&op;
-    for (int i=0;i<5;i++){
-        captured |= shift_d_r(captured)&op;
-    }
-    if (shift_d_r(captured)&self!=0){
+        captured = shift_d_r(move)&op;
+        for (int i=0;i<5;i++){
+            captured |= shift_d_r(captured)&op;
+        }
+        // if (shift_d_r(captured)&self!=0){
         self |= captured;
         op &= ~captured;
-    }
+        // }
 
-    captured = shift_d_l(move)&op;
-    for (int i=0;i<5;i++){
-        captured |= shift_d_l(captured)&op;
-    }
-    if (shift_d_l(captured)&self!=0){
+        captured = shift_d_l(move)&op;
+        for (int i=0;i<5;i++){
+            captured |= shift_d_l(captured)&op;
+        }
+        // if (shift_d_l(captured)&self!=0){
         self |= captured;
         op &= ~captured;
-    }
+        // }
 
-    if (turn % 2 == 0){
-        new_board->black = self;
-        new_board->white = op;
+        if (turn % 2 == 0){
+            board->black = self;
+            board->white = op;
+        }
+        else{
+            board->white = self;
+            board->black = op;
+        }
+        turn++;
+        board->turn = turn;
+
+        return board;
     }
     else{
-        new_board->white = self;
-        new_board->black = op;
+        printf("\n\nInvalid Move\n\n");
+        return NULL;
     }
-    new_board->turn = turn++;
-    return new_board;
 }
 
 bool game_over(struct board *board, bool black_pass, bool white_pass){
@@ -215,21 +235,24 @@ bool game_over(struct board *board, bool black_pass, bool white_pass){
 }
 
 void print_board(struct board *board, bool withMoves){
-    char show[1024] = "";
+    char show[1024] = "  A B C D E F G H\n1 ";
     unsigned long long white = board->white;
     unsigned long long black = board->black;
     int turn = board->turn;
-    char w[10] = "W ";
-    char b[10] = "B ";
-    char none[10] = "_ ";
-    char move[10] = "x ";
+    char w[5] = "W ";
+    char b[5] = "B ";
+    char none[5] = "_ ";
+    char move[5] = "x ";
     unsigned long long moves;
+    char *specialSpace = malloc(25);
+    char buffer[10];
+    int row = 2;
     if (withMoves == true){
         if (turn%2==0){
-            moves = generate_moves(black,white);
+            moves = generate_moves(board,1);
         }
         else{
-            moves = generate_moves(white,black);
+            moves = generate_moves(board,-1);
         }
     }
     for (int i=63;i>=0;i--){
@@ -246,9 +269,15 @@ void print_board(struct board *board, bool withMoves){
         else{
             strcat(show,none);
         }
-        if (i%8 == 0){
-            strcat(show,"\n");
+        if (i%8 == 0 && i>1){
+            sprintf(buffer,"\n%d ",row);
+            strcat(show,buffer);
+            row++;
         }
     }
     printf("%s",show);
+}
+
+unsigned long long coord_to_move(char move[5]){
+    return 0x0;
 }
