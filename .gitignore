@@ -3,3 +3,7 @@ legal_moves_test.py
 __pycache__/
 *.pyc
 cc-lib/
+Othello_C/test.cc
+Othello_C/src/viewer/SDL2/
+Othello_C/src/viewer/SDL2_mingw_dev
+*.exe
