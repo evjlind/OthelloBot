@@ -7,3 +7,4 @@ Othello_C/test.cc
 Othello_C/src/viewer/SDL2/
 Othello_C/src/viewer/SDL2_mingw_dev
 *.exe
+*.pyc
