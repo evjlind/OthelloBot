@@ -13,12 +13,17 @@ struct board{
     int turn;
     uint64_t white;
     uint64_t black;
-
+    uint64_t moves;
 };
 
 struct game{
     int winner;
     char moves[512];
+};
+
+struct Move{
+    int src_row = 0, src_col = 0;
+    string m_name;
 };
 
 struct game* play_game(int player1,int player2);
@@ -35,5 +40,6 @@ uint64_t generate_moves(struct board *board,int player);
 struct board* make_move(uint64_t move, struct board *board, uint64_t legalMoves);
 bool game_over(struct board *board, bool black_pass, bool white_pass);
 void print_board(struct board *board, bool withMoves);
-uint64_t coord_to_move(string move);
-vector<int> get_move_indicies(uint64_t moves);
+string move_to_coord(Move move);
+Move coord_to_move(string move);
+vector<Move> get_move_indicies(uint64_t moves);
