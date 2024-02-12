@@ -1,3 +1,6 @@
+#ifndef _CHESS_H
+#define _CHESS_H
+
 #include<cstdint>
 #include<string>
 #include<vector>
@@ -44,8 +47,12 @@ uint64_t shift_d_r(uint64_t board);
 uint64_t shift_d_l(uint64_t board);
 uint64_t generate_moves(Board *board,int player);
 Board* make_move(uint64_t move, Board *board, uint64_t legalMoves);
-bool game_over(struct Board *board, bool black_pass, bool white_pass);
-void print_board(struct Board *board, bool withMoves);
+bool game_over(Board *board);
+void print_board(Board *board, bool withMoves);
 string move_to_coord(Move move);
-Move coord_to_move(string move);
+Move* coord_to_move(string move);
+uint64_t coord_to_int(Move move);
 vector<Move> get_move_indicies(uint64_t moves);
+void disp_move_vect(vector<Move> moves);
+
+#endif

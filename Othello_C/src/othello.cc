@@ -227,7 +227,19 @@ Board* make_move(uint64_t move, Board *board, uint64_t legalMoves){
     }
 }
 
-bool game_over(Board *board, bool black_pass, bool white_pass){
+bool game_over(Board *board){
+    bool white_pass;
+    bool black_pass;
+    uint64_t white_moves;
+    uint64_t black_moves;
+    black_moves = generate_moves(board,1);
+    white_moves = generate_moves(board,2);
+    if (black_moves == 0){
+        black_pass = true;
+    }
+    if (white_moves == 0){
+        white_pass = true;
+    }
     return (board->white|board->black == FULL)|| (board->white == 0 || board->black == 0) || (black_pass&white_pass);
 }
 
@@ -239,6 +251,7 @@ void print_board(Board *board, bool withMoves){
     uint64_t moves;
     char row_char[5]; // a little cumbersome, might change in future
     int row = 2;
+    
     if (withMoves == true){
         if (turn%2==0){
             moves = generate_moves(board,1);
@@ -271,8 +284,8 @@ void print_board(Board *board, bool withMoves){
 }
 
 //Not sure if these two will be needed
-Move coord_to_move(string coord){
-    struct Move move;
+Move* coord_to_move(string coord){
+    Move *move;
     return move;
 }
 
@@ -304,8 +317,24 @@ vector<Move> get_move_indicies(uint64_t moves){
     return move_indicies;
 }
 
+uint64_t coord_to_int(Move move){
+    return 0;
+}
 
-Game play_rand_game(){
-    Game n_game;
-    return n_game;
+//currently ints are ids for player type, will change in future
+Game* play_game(int player1, int player2){
+    Game *game;
+    Board *board = new_board();
+    bool black_pass, white_pass;
+    while (game_over(board) == false){
+        
+    }
+    return game;
+}
+
+void disp_move_vect(vector<Move> moves){
+    int length = moves.size();
+    for (int i=0;i<length;i++){
+        cout << moves[i].src_col << "," << moves[i].src_row << endl;
+    }
 }
