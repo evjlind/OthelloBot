@@ -335,6 +335,6 @@ Game* play_game(int player1, int player2){
 void disp_move_vect(vector<Move> moves){
     int length = moves.size();
     for (int i=0;i<length;i++){
-        cout << moves[i].src_col << "," << moves[i].src_row << endl;
+        cout << moves[i].m_name << endl;
     }
 }
