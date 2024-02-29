@@ -22,7 +22,7 @@ Board* new_board(){
 
 Move* init_move(){
     Move* move = new Move;
-    int row = 0, col = 0;
+    int row = 9, col = 9;
     string name = "X#";
     uint64_t value = 0;
     move->m_value = value;
@@ -31,6 +31,18 @@ Move* init_move(){
     move->src_row = row;
     return move;
 }
+
+Game* init_game(){
+    Board *board = new_board();
+    vector<Move*> history;
+    int win = -1;
+    Game* game = new Game;
+    game->board = board;
+    game->move_hist = history;
+    game->winner = win;
+    return game;
+}
+
 //shift all pieces right 1 square
 uint64_t shift_r(uint64_t board){
     return (board&R_MASK)>>1;
@@ -150,6 +162,8 @@ uint64_t generate_moves(Board *board){
 //
 Board* make_move(Move *move, Board *board, uint64_t legalMoves){
     uint64_t expressedMove = move->m_value;
+    cout << expressedMove << endl;
+    cout << legalMoves << endl;
     int turn = board->turn;
     uint64_t self, op;
     uint64_t captured;
@@ -289,7 +303,7 @@ void print_board(Board *board, bool withMoves){
             row++;
         }
     }
-    cout << show << endl;
+    cout << show << endl << endl;
 }
 
 //Not sure if these two will be needed
@@ -306,12 +320,12 @@ vector<Move*> get_move_indicies(uint64_t moves){
     uint64_t m = moves;
     uint64_t val = 0x8000000000000000;
     vector<Move*> move_indicies;
-    Move *temp = init_move();
     string n_string = "";
     int index, real_row;
     int real_ind=0;
     char col_to_letter[8] = {'A','B','C','D','E','F','G','H'};
     while (m>0){
+        Move *temp = init_move();
         index = countl_zero(m);
         m = m << index+1;
         real_ind += index+1;
@@ -323,8 +337,7 @@ vector<Move*> get_move_indicies(uint64_t moves){
         n_string += real_row+'0';
         temp->m_name = n_string;
         temp->m_value = val>>(real_row)*8>>(real_ind % 8)-1;
-        n_string = ""; 
-
+        n_string = "";
         move_indicies.push_back(temp);
     }
     return move_indicies;

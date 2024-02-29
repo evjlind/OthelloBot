@@ -3,6 +3,7 @@
 #define _PLAYER_H
 #include "othello.h"
 
+
 struct Player{
     virtual Move* choose_move(Board *board, vector<Move*> legalMoves){
         Move *move;

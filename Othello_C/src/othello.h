@@ -41,6 +41,7 @@ struct Match{
 
 Board* new_board();
 Move* init_move();
+Game* init_game();
 uint64_t shift_r(uint64_t board);
 uint64_t shift_l(uint64_t board);
 uint64_t shift_u(uint64_t board);
