@@ -21,5 +21,6 @@ struct Player{
 };
 
 Player *Random();
+Player *Human();
 
 #endif

@@ -16,6 +16,26 @@ struct RandomPlayer : public Player {
     
 };
 
+struct HumanPlayer : public Player {
+    Move* choose_move(Board *board, vector<Move*> legalMoves) override {
+        string input_move;
+        uint64_t move_val;
+        while(1){
+        cout << "Choose a move:" << endl;
+        cin >> input_move;
+        for (int i=0;i<legalMoves.size();i++){
+            if (input_move == legalMoves[i]->m_name){
+                return legalMoves[i];
+            }
+        }
+        cout << "Illegal Move" << endl;
+    }
+}};
+
 Player* Random(){
     return new RandomPlayer;
+};
+
+Player* Human(){
+    return new HumanPlayer;
 };

@@ -4,6 +4,7 @@
 #include<cstdint>
 #include<string>
 #include<vector>
+#include<unordered_map>
 
 #define INIT_BOARD_BLACK 0x810000000ULL
 #define INIT_BOARD_WHITE 0x1008000000ULL
@@ -52,13 +53,14 @@ uint64_t shift_d_r(uint64_t board);
 uint64_t shift_d_l(uint64_t board);
 uint64_t generate_moves(Board *board);
 Board* make_move(Move *move, Board *board, uint64_t legalMoves);
-bool game_over(Board *board);
+bool game_over(Board *board,vector<Move*> history);
 void print_board(Board *board, bool withMoves);
 string move_to_coord(Move *move);
 Move* coord_to_move(string move);
 uint64_t coord_to_int(Move *move);
-vector<Move*> get_move_indicies(uint64_t moves);
-void disp_move_vect(vector<Move> moves);
+vector<Move*> get_move_indicies(uint64_t moves, unordered_map<string,uint64_t> lookups);
+void disp_move_vect(vector<Move*> moves);
 int score_player(uint64_t board);
+unordered_map<string,uint64_t> build_move_lookup();
 
 #endif

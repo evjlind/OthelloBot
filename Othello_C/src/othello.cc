@@ -3,7 +3,6 @@
 #include<iostream>
 #include<vector>
 #include<cmath>
-#include<iterator>
 #include<bitset>
 #include"othello.h"
 
@@ -162,8 +161,6 @@ uint64_t generate_moves(Board *board){
 //
 Board* make_move(Move *move, Board *board, uint64_t legalMoves){
     uint64_t expressedMove = move->m_value;
-    cout << expressedMove << endl;
-    cout << legalMoves << endl;
     int turn = board->turn;
     uint64_t self, op;
     uint64_t captured;
@@ -250,25 +247,28 @@ Board* make_move(Move *move, Board *board, uint64_t legalMoves){
         return board;
     }
     else{
-        cout << "\n\nInvalid Move\n\n";
+        printf("\n\nInvalid Move\n\n");
         return NULL;
     }
 }
 
-bool game_over(Board *board){
-    bool no_moves;
-    uint64_t m1;
-    m1 = generate_moves(board);
-    if (m1 == 0){
-        board->turn++;
-        m1 = generate_moves(board);
-        board->turn--;
-        if (m1 == 0){
-            no_moves = true;
-            printf("gg");
-        }
+bool game_over(Board *board,vector<Move*> history){
+    bool no_moves = false;
+    int length = history.size();
+    printf("%d\n",length);
+    disp_move_vect(history);
+    switch(length){
+        case 0:
+            break;
+        case 1:
+            break;
+        default:
+            if ((history[length-1]->m_name == "X#") && history[length-2]->m_name == "X#"){
+                no_moves = true;
+                }
+            break;
     }
-    return ((board->white)|(board->black) == FULL) || (no_moves);
+    return (((board->white)|(board->black)) == FULL) || (no_moves);
 }
 
 void print_board(Board *board, bool withMoves){
@@ -308,7 +308,7 @@ void print_board(Board *board, bool withMoves){
 
 //Not sure if these two will be needed
 Move* coord_to_move(string coord){
-    Move *move;
+    Move *move = init_move();
     return move;
 }
 
@@ -316,27 +316,25 @@ string move_to_coord(Move move){
     return "A1";
 }
 
-vector<Move*> get_move_indicies(uint64_t moves){
+vector<Move*> get_move_indicies(uint64_t moves, unordered_map<string,uint64_t> lookups){
     uint64_t m = moves;
-    uint64_t val = 0x8000000000000000;
     vector<Move*> move_indicies;
     string n_string = "";
     int index, real_row;
-    int real_ind=0;
+    int real_ind=-1;
     char col_to_letter[8] = {'A','B','C','D','E','F','G','H'};
     while (m>0){
         Move *temp = init_move();
         index = countl_zero(m);
         m = m << index+1;
         real_ind += index+1;
-        real_row = ceil(real_ind / 8)+1; // 3
-        real_row--;
-        temp->src_row = real_row;  // 2
-        temp->src_col = (real_ind % 8)-1;
+        real_row = floor(real_ind / 8)+1;
+        temp->src_row = real_row;
+        temp->src_col = (real_ind%8);
         n_string += col_to_letter[temp->src_col];
-        n_string += real_row+'0';
+        n_string += (real_row)+'0';
         temp->m_name = n_string;
-        temp->m_value = val>>(real_row)*8>>(real_ind % 8)-1;
+        temp->m_value = lookups[n_string];
         n_string = "";
         move_indicies.push_back(temp);
     }
@@ -351,14 +349,32 @@ uint64_t coord_to_int(Move *move){
     return 0;
 }
 
-void disp_move_vect(vector<Move> moves){
+void disp_move_vect(vector<Move*> moves){
     int length = moves.size();
     for (int i=0;i<length;i++){
-        cout << moves[i].m_name << endl;
+        cout << moves[i]->m_name << endl;
     }
 }
 
 int score_player(uint64_t v){
     bitset<64> d (v);
     return d.count();
+}
+
+unordered_map<string,uint64_t> build_move_lookup(){
+    uint64_t val = 0x8000000000000000;
+    std::unordered_map<std::string,uint64_t> u;
+    char col[8] = {'A','B','C','D','E','F','G','H'};
+    char row[8] = {'1','2','3','4','5','6','7','8'};
+    std::string temp = "";
+    for (int i=0;i<8;i++){
+        for (int j=0;j<8;j++){
+            temp += col[j];
+            temp += row[i];
+            u.insert({temp,val});
+            val = val >> 1;
+            temp = "";
+        }
+    }
+    return u;
 }

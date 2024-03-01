@@ -8,11 +8,12 @@ using namespace std;
 Game* play_game(Player *player1, Player *player2,unordered_map<string,uint64_t> lookups);
 
 int main(){
-    Player *player1 = Human();
+    Player *player1 = Random();
     Player *player2 = Random();
     unordered_map<string,uint64_t> lookup_map = build_move_lookup();
     Game *test = play_game(player1, player2, lookup_map);
     printf("game over");
+    // cout << test->winner << endl;
     int b_score = score_player(test->board->black);
     int w_score = score_player(test->board->white);
     printf("Black: %d, White %d\n",b_score,w_score);
@@ -30,7 +31,7 @@ Game* play_game(Player *player1, Player *player2, unordered_map<string,uint64_t>
     Move *passMove = init_move();
     vector<Move*> legalMoves;
     int j = 0;
-    while (!game_over(board,game->move_hist)){
+    while (game_over(board,game->move_hist) == false){
         cout << endl << "Turn: " << board->turn+1 << endl;
         print_board(board,true);
         uint64_t moves = generate_moves(board);
@@ -61,6 +62,10 @@ Game* play_game(Player *player1, Player *player2, unordered_map<string,uint64_t>
                 cout << "pass" << endl;
             }
         }
+        
+        // if (game_over(board)){
+        //     break;
+        // }
         j++;
     }
     game->board = board;
