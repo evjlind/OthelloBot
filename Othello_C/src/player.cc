@@ -1,4 +1,3 @@
-
 #include"player.h"
 #include<cstdlib>
 #include<iostream>
