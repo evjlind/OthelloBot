@@ -6,7 +6,6 @@
 #include <unordered_map>
 #include <unistd.h>
 #include <cmath>
-#include<SDL2/include/SDL2/SDL.h>
 
 #include "../../../cc-lib/threadutil.h"
 #include "../../../cc-lib/randutil.h"
@@ -50,3 +49,7 @@ using namespace std;
 
 using int64 = int64_t;
 using uint32 = uint32_t;
+
+int main(){
+    
+}

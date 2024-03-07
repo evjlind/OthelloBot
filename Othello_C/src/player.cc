@@ -38,3 +38,4 @@ Player* Random(){
 Player* Human(){
     return new HumanPlayer;
 };
+

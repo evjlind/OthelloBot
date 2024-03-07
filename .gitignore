@@ -8,3 +8,5 @@ Othello_C/src/viewer/SDL2/
 Othello_C/src/viewer/SDL2_mingw_dev
 *.exe
 Othello_C/src/boost_1_55_0/
+SDL3_src/
+othello_rust/target
