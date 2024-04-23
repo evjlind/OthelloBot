@@ -31,6 +31,7 @@ def play_game(game,p1,p2):
     score = game.score_board()
     #print(score)
     game.disp_board()
+    print(game.score_board())
     game.reset()
     return score, moves
 start = time.time()

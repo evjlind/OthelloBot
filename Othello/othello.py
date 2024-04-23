@@ -134,75 +134,127 @@ class OthelloEnv():
         n=1
         if i<=6:   
             if self.board[i+n][j] == -player: 
+                flipped = np.zeros_like(self.board)
                 while (i+n)<=7:
-                    if self.board[i+n][j] == -player: 
-                        self.board[i+n][j] = player
+                    if self.board[i+n][j] == -player:
+                        flipped[i+n][j] = player
                         n=n+1
+                    elif self.board[i+n][j] == player:
+                        test = np.where(flipped==player)
+                        for p in range(int(len(test[0]))):
+                            self.board[test[0][p]][test[1][p]] = player
+                        break
                     else:
                         n=999
+            
         n=1
         if i>=1:
             if self.board[i-n][j] == -player: 
+                flipped = np.zeros_like(self.board)
                 while (i-n)>=0:
                     if self.board[i-n][j] == -player: 
-                        self.board[i-n][j] = player
+                        flipped[i-n][j] = player
                         n=n+1
+                    elif self.board[i-n][j] == player:
+                        test = np.where(flipped==player)
+                        for p in range(int(len(test[0]))):
+                            self.board[test[0][p]][test[1][p]] = player
+                        break
                     else:
                         n=999
+            
         n=1
         if j<=6:
             if self.board[i][j+n] == -player: 
+                flipped = np.zeros_like(self.board)
                 while (j+n)<=7:
                     if self.board[i][j+n] == -player: 
-                        self.board[i][j+n] = player
+                        flipped[i][j+n] = player
                         n=n+1
+                    elif self.board[i][j+n] == player:
+                        test = np.where(flipped==player)
+                        for p in range(int(len(test[0]))):
+                            self.board[test[0][p]][test[1][p]] = player
+                        break
                     else:
                         n=999
+            
         n=1
         if j>=1:
             if self.board[i][j-n] == -player: 
+                flipped = np.zeros_like(self.board)
                 while (j-n)>=0:
                     if self.board[i][j-n] == -player: 
-                        self.board[i][j-n] = player
+                        flipped[i][j-n] = player
                         n=n+1
+                    elif self.board[i][j-n] == player:
+                        test = np.where(flipped==player)
+                        for p in range(int(len(test[0]))):
+                            self.board[test[0][p]][test[1][p]] = player
+                        break
                     else:
                         n=999
         n=1
         if i<=6 and j<=6:
             if self.board[i+n][j+n] == -player:
+                flipped = np.zeros_like(self.board)
                 while(i+n<=7 and j+n<=7):
                     if self.board[i+n][j+n] == -player:
-                        self.board[i+n][j+n] = player
+                        flipped[i+n][j+n] = player
                         n=n+1
+                    elif self.board[i+n][j+n] == player:
+                        test = np.where(flipped==player)
+                        for p in range(int(len(test[0]))):
+                            self.board[test[0][p]][test[1][p]] = player
+                        break
                     else:
                         n=999
         n=1
         if i<=6 and j>=0:
             if self.board[i+n][j-n] == -player:
+                flipped = np.zeros_like(self.board)
                 while (i+n<=7 and j-n>=0):
                     if self.board[i+n][j-n] == -player:
-                        self.board[i+n][j-n] = player
+                        flipped[i+n][j-n] = player
                         n=n+1
+                    elif self.board[i+n][j-n] == player:
+                        test = np.where(flipped==player)
+                        for p in range(int(len(test[0]))):
+                            self.board[test[0][p]][test[1][p]] = player
+                        break
                     else:
                         n=999
         n=1
         if i>=0 and j<=6:
             if self.board[i-n][j+n] == -player:
+                flipped = np.zeros_like(self.board)
                 while ((i-n)>=0 and (j+n)<=7):
                     if self.board[i-n][j+n] == -player:
-                        self.board[i-n][j+n] = player
+                        flipped[i-n][j+n] = player
                         n=n+1
+                    elif self.board[i-n][j+n] == player:
+                        test = np.where(flipped==player)
+                        for p in range(int(len(test[0]))):
+                            self.board[test[0][p]][test[1][p]] = player
+                        break
                     else:
                         n=999
         n=1
         if i>=0 and j>=0:
             if self.board[i-n][j-n] == -player:
+                flipped = np.zeros_like(self.board)
                 while ((i-n)>=0 and (j-n)>=0):
                     if self.board[i-n][j-n] == -player:
-                        self.board[i-n][j-n] = player
+                        flipped[i-n][j-n] = player
                         n=n+1
+                    elif self.board[i-n][j-n] == player:
+                        test = np.where(flipped==player)
+                        for p in range(int(len(test[0]))):
+                            self.board[test[0][p]][test[1][p]] = player
+                        break
                     else:
                         n=999
+        # self.board = flipped
         self.board[i][j] = player
 
 
@@ -233,8 +285,9 @@ class OthelloEnv():
             return False
     
     def score_board(self):
-        score = np.sum(self.board)
-        return score
+        black_score = len(np.where(self.board==1)[0])
+        white_score = len(np.where(self.board==-1)[0])
+        return (black_score,white_score)
 
     def getGameOver(self):
         if OthelloEnv.has_legal_move(self,1) or  OthelloEnv.has_legal_move(self,-1):
