@@ -19,13 +19,13 @@ def play_game(game,p1,p2):
     player = 1
     moves = []
     while not OthelloEnv.getGameOver(game):
-        game.moves = OthelloEnv._legal_moves(game,player)
+        game.moves = OthelloEnv.legal_moves(game,player)
         if player == 1:
-            move = p1.play(game,1)
+            move = p1.play()
         else:
-            move = p2.play(game,-1)
+            move = p2.play()
         #print(move)
-        game.make_move(move,player)
+        game.board = OthelloEnv.make_move(game.board,move,player)
         moves.append(move)
         player = -player
     score = game.score_board()

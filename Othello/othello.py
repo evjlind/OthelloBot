@@ -19,10 +19,9 @@ class OthelloEnv():
         self.board[4][3]=-1
         self.board[4][4]=1
 
-    def _legal_moves(self,player):
-        board = self.board
+    def legal_moves(board,player):
         coords = [(i,j) for i in range(8) for j in range(8) if board[i][j] == player]
-        legal_moves = np.zeros_like(self.board)
+        legal_moves = np.zeros_like(board)
         #player 2 =  black, player 1 = white
         other_p = -player
         for m in coords:
@@ -126,159 +125,140 @@ class OthelloEnv():
                             n=999
         return legal_moves
     
-    def make_move(self, move, player):
+    def make_move(board, move, player):
         if move == (-1,-1):
             return None
         i = move[0]
         j = move[1]
         n=1
         if i<=6:   
-            if self.board[i+n][j] == -player: 
-                flipped = np.zeros_like(self.board)
+            if board[i+n][j] == -player: 
+                flipped = np.zeros_like(board)
                 while (i+n)<=7:
-                    if self.board[i+n][j] == -player:
+                    if board[i+n][j] == -player:
                         flipped[i+n][j] = player
                         n=n+1
-                    elif self.board[i+n][j] == player:
+                    elif board[i+n][j] == player:
                         test = np.where(flipped==player)
                         for p in range(int(len(test[0]))):
-                            self.board[test[0][p]][test[1][p]] = player
+                            board[test[0][p]][test[1][p]] = player
                         break
                     else:
                         n=999
             
         n=1
         if i>=1:
-            if self.board[i-n][j] == -player: 
-                flipped = np.zeros_like(self.board)
+            if board[i-n][j] == -player: 
+                flipped = np.zeros_like(board)
                 while (i-n)>=0:
-                    if self.board[i-n][j] == -player: 
+                    if board[i-n][j] == -player: 
                         flipped[i-n][j] = player
                         n=n+1
-                    elif self.board[i-n][j] == player:
+                    elif board[i-n][j] == player:
                         test = np.where(flipped==player)
                         for p in range(int(len(test[0]))):
-                            self.board[test[0][p]][test[1][p]] = player
+                            board[test[0][p]][test[1][p]] = player
                         break
                     else:
                         n=999
             
         n=1
         if j<=6:
-            if self.board[i][j+n] == -player: 
-                flipped = np.zeros_like(self.board)
+            if board[i][j+n] == -player: 
+                flipped = np.zeros_like(board)
                 while (j+n)<=7:
-                    if self.board[i][j+n] == -player: 
+                    if board[i][j+n] == -player: 
                         flipped[i][j+n] = player
                         n=n+1
-                    elif self.board[i][j+n] == player:
+                    elif board[i][j+n] == player:
                         test = np.where(flipped==player)
                         for p in range(int(len(test[0]))):
-                            self.board[test[0][p]][test[1][p]] = player
+                            board[test[0][p]][test[1][p]] = player
                         break
                     else:
                         n=999
             
         n=1
         if j>=1:
-            if self.board[i][j-n] == -player: 
-                flipped = np.zeros_like(self.board)
+            if board[i][j-n] == -player: 
+                flipped = np.zeros_like(board)
                 while (j-n)>=0:
-                    if self.board[i][j-n] == -player: 
+                    if board[i][j-n] == -player: 
                         flipped[i][j-n] = player
                         n=n+1
-                    elif self.board[i][j-n] == player:
+                    elif board[i][j-n] == player:
                         test = np.where(flipped==player)
                         for p in range(int(len(test[0]))):
-                            self.board[test[0][p]][test[1][p]] = player
+                            board[test[0][p]][test[1][p]] = player
                         break
                     else:
                         n=999
         n=1
         if i<=6 and j<=6:
-            if self.board[i+n][j+n] == -player:
-                flipped = np.zeros_like(self.board)
+            if board[i+n][j+n] == -player:
+                flipped = np.zeros_like(board)
                 while(i+n<=7 and j+n<=7):
-                    if self.board[i+n][j+n] == -player:
+                    if board[i+n][j+n] == -player:
                         flipped[i+n][j+n] = player
                         n=n+1
-                    elif self.board[i+n][j+n] == player:
+                    elif board[i+n][j+n] == player:
                         test = np.where(flipped==player)
                         for p in range(int(len(test[0]))):
-                            self.board[test[0][p]][test[1][p]] = player
+                            board[test[0][p]][test[1][p]] = player
                         break
                     else:
                         n=999
         n=1
         if i<=6 and j>=0:
-            if self.board[i+n][j-n] == -player:
-                flipped = np.zeros_like(self.board)
+            if board[i+n][j-n] == -player:
+                flipped = np.zeros_like(board)
                 while (i+n<=7 and j-n>=0):
-                    if self.board[i+n][j-n] == -player:
+                    if board[i+n][j-n] == -player:
                         flipped[i+n][j-n] = player
                         n=n+1
-                    elif self.board[i+n][j-n] == player:
+                    elif board[i+n][j-n] == player:
                         test = np.where(flipped==player)
                         for p in range(int(len(test[0]))):
-                            self.board[test[0][p]][test[1][p]] = player
+                            board[test[0][p]][test[1][p]] = player
                         break
                     else:
                         n=999
         n=1
         if i>=0 and j<=6:
-            if self.board[i-n][j+n] == -player:
-                flipped = np.zeros_like(self.board)
+            if board[i-n][j+n] == -player:
+                flipped = np.zeros_like(board)
                 while ((i-n)>=0 and (j+n)<=7):
-                    if self.board[i-n][j+n] == -player:
+                    if board[i-n][j+n] == -player:
                         flipped[i-n][j+n] = player
                         n=n+1
-                    elif self.board[i-n][j+n] == player:
+                    elif board[i-n][j+n] == player:
                         test = np.where(flipped==player)
                         for p in range(int(len(test[0]))):
-                            self.board[test[0][p]][test[1][p]] = player
+                            board[test[0][p]][test[1][p]] = player
                         break
                     else:
                         n=999
         n=1
         if i>=0 and j>=0:
-            if self.board[i-n][j-n] == -player:
-                flipped = np.zeros_like(self.board)
+            if board[i-n][j-n] == -player:
+                flipped = np.zeros_like(board)
                 while ((i-n)>=0 and (j-n)>=0):
-                    if self.board[i-n][j-n] == -player:
+                    if board[i-n][j-n] == -player:
                         flipped[i-n][j-n] = player
                         n=n+1
-                    elif self.board[i-n][j-n] == player:
+                    elif board[i-n][j-n] == player:
                         test = np.where(flipped==player)
                         for p in range(int(len(test[0]))):
-                            self.board[test[0][p]][test[1][p]] = player
+                            board[test[0][p]][test[1][p]] = player
                         break
                     else:
                         n=999
-        # self.board = flipped
-        self.board[i][j] = player
-
-
-#interesting idea for searching board but doesn't work for anything yet
-        # hori = self.board[i,:]
-        # vert = self.board[:,j]
-        # k = j-i
-        # m = 7-j-i
-        # diag1 = np.diag(self.board,k)
-        # diag2 = np.diag(np.fliplr(self.board),m)
-
-        # hori = OthelloEnv.flip_pieces(hori)
-        # vert = OthelloEnv.flip_pieces(vert)
-        # diag1 = OthelloEnv.flip_pieces(diag1)
-        # diag2 = OthelloEnv.flip_pieces(diag2)
-
-        # def flip_pieces(vector,player):
-        #   player_loc = np.where(vector == player)
-        #   opp_loc = np.where(vector == -player)
-        #   if 
-
+        # board = flipped
+        board[i][j] = player
+        return board
 
     def has_legal_move(self,player):
-        moves = OthelloEnv._legal_moves(self,player)
+        moves = OthelloEnv.legal_moves(self,player)
         if abs(np.sum(moves))>0:
             return True
         else:
