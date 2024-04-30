@@ -18,7 +18,10 @@ struct RandomPlayer : public Player {
 
 struct MinimaxPlayer : public Player {
     Move* choose_move(Board *board, vector<Move*> legalMoves) override {
-        int chosen = minimax_search(board, legalMoves,);
+        int a = numeric_limits<int>::max();
+        int b = -1*a;
+        int depth = 5; // Replace with iterative deepening later
+        int chosen = minimax_search(board, legalMoves, depth, b,a);
         cout << legalMoves[chosen] << endl;
         return legalMoves[chosen];
     }
