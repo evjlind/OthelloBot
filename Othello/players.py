@@ -32,7 +32,8 @@ class ab_ScoreSearch():
     def __init__(self,game):
         self.game = game
 
-    @decoratorTimer(2,'ab_scoreSearch')
+
+    # @decoratorTimer(2,'ab_scoreSearch')
     def play(self,game,player):
         internal_game = OthelloEnv()
         num_moves = np.count_nonzero(game.moves)
@@ -43,7 +44,7 @@ class ab_ScoreSearch():
         p = np.where(game.moves == player)
         for i in range(num_moves):
             internal_game.board[p[0][i]][p[1][i]] = player
-            scores[p[0][i]][p[1][i]] = ab_ScoreSearch.alpha_beta_score(self,internal_game,6,-math.inf,math.inf,player)
+            scores[p[0][i]][p[1][i]] = ab_ScoreSearch.alpha_beta_score(self,internal_game,3,-math.inf,math.inf,player)
             internal_game.board[p[0][i]][p[1][i]] = 0
         scores = scores.flatten()
         scores = scores[scores.astype(bool)]
@@ -74,7 +75,10 @@ class ab_ScoreSearch():
                 child = OthelloEnv()
                 child.board = game.board.copy()
                 child.make_move(move,player)
-                value = max(value,ab_ScoreSearch.alpha_beta_score(self,child,depth-1,a,b,-player))
+                n_score = ab_ScoreSearch.alpha_beta_score(self,child,depth-1,a,b,-player)
+                if type(n_score) is tuple:
+                    n_score = n_score[0]-n_score[1]
+                value = max(value,n_score)
                 if value > b:
                     break
             return value
@@ -84,7 +88,10 @@ class ab_ScoreSearch():
                 child = OthelloEnv()
                 child.board = game.board.copy()
                 child.make_move(move,player)
-                value = min(value,ab_ScoreSearch.alpha_beta_score(self,child,depth-1,a,b,-player))
+                n_score = ab_ScoreSearch.alpha_beta_score(self,child,depth-1,a,b,-player)
+                if type(n_score) is tuple:
+                    n_score = n_score[0]-n_score[1]
+                value = min(value,n_score)
                 if value < a:
                     break
                 return value
