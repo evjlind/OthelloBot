@@ -8,7 +8,7 @@ using namespace std;
 Game* play_game(Player *player1, Player *player2,unordered_map<string,uint64_t> lookups);
 
 int main(){
-    Player *player1 = Random();
+    Player *player1 = Minimax();
     Player *player2 = Random();
     unordered_map<string,uint64_t> lookup_map = build_move_lookup();
     Game *test = play_game(player1, player2, lookup_map);
@@ -18,9 +18,9 @@ int main(){
     int w_score = score_player(test->board->white);
     printf("Black: %d, White %d\n",b_score,w_score);
     print_board(test->board,false);
-    for (int i=0;i<test->move_hist.size();i++){
-        cout << test->move_hist[i]->m_name << endl;
-    }
+    // for (int i=0;i<test->move_hist.size();i++){
+    //     cout << test->move_hist[i]->m_name << endl;
+    // }
     return 0;
 }
 

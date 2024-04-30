@@ -2,6 +2,7 @@
 #include<cstdlib>
 #include<iostream>
 #include<random>
+#include<limits>
 
 
 struct RandomPlayer : public Player {
@@ -13,6 +14,22 @@ struct RandomPlayer : public Player {
         return legalMoves[chosen];
     }
     
+};
+
+struct MinimaxPlayer : public Player {
+    Move* choose_move(Board *board, vector<Move*> legalMoves) override {
+        int chosen = minimax_search(board, legalMoves,);
+        cout << legalMoves[chosen] << endl;
+        return legalMoves[chosen];
+    }
+
+    int minimax_search(Board *board, vector<Move*> legalMoves, int depth, int alpha, int beta){
+        int chosen = -1; 
+        for (int i = 0;i<legalMoves.size();i++){
+
+        }
+        return 0;
+    }
 };
 
 struct HumanPlayer : public Player {
@@ -33,6 +50,10 @@ struct HumanPlayer : public Player {
 
 Player* Random(){
     return new RandomPlayer;
+};
+
+Player* Minimax(){
+    return new MinimaxPlayer;
 };
 
 Player* Human(){
