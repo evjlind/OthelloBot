@@ -196,18 +196,16 @@ class HandMade():
             return True
         else:
             return False
-
+    
+    # using https://gekomad.github.io/Cinnamon/BitboardCalculator/ for reference
     def board_to_ints(board):
         n_board = board.flatten()
-        print(len(n_board))
         p1_value = 0
         p2_value = 0
         for i in range(len(n_board)):
             if n_board[i] == 1:
-               print(i)
                p1_value += 2**(63-i)
             if n_board[i] == -1:
-               print(i)
                p2_value += 2**(63-i)
         return p1_value,p2_value
         
