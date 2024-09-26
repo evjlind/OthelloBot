@@ -1,19 +1,20 @@
 import numpy as np
-
+BOARD_SIZE = 8
 class OthelloEnv():
     metadata = {"name": "othelloEnv_v1"}
 
     def __init__(self):
 
-        self.board = np.zeros((8,8),dtype=int)
+        self.board = np.zeros((BOARD_SIZE,BOARD_SIZE),dtype=int)
         self.board[3][3]=1
         self.board[3][4]=-1
         self.board[4][3]=-1
         self.board[4][4]=1
-        self.moves = np.zeros_like(self.board)
+        self.moves = np.zeros((BOARD_SIZE,BOARD_SIZE))
+        self.num_moves = 0
 
     def reset(self):
-        self.board = np.zeros((8,8),dtype=int)
+        self.board = np.zeros((BOARD_SIZE,BOARD_SIZE),dtype=int)
         self.board[3][3]=1
         self.board[3][4]=-1
         self.board[4][3]=-1
@@ -21,8 +22,8 @@ class OthelloEnv():
 
     def _legal_moves(self,player):
         board = self.board
-        coords = [(i,j) for i in range(8) for j in range(8) if board[i][j] == player]
-        legal_moves = np.zeros_like(self.board)
+        coords = [(i,j) for i in range(BOARD_SIZE) for j in range(BOARD_SIZE) if board[i][j] == player]
+        legal_moves = np.zeros((BOARD_SIZE,BOARD_SIZE))
         #player 2 =  black, player 1 = white
         other_p = -player
         for m in coords:
@@ -127,6 +128,7 @@ class OthelloEnv():
         return legal_moves
     
     def make_move(self, move, player):
+        self.num_moves += 1
         if move == (-1,-1):
             return None
         i = move[0]
@@ -134,7 +136,7 @@ class OthelloEnv():
         n=1
         if i<=6:   
             if self.board[i+n][j] == -player: 
-                flipped = np.zeros_like(self.board)
+                flipped = np.zeros((BOARD_SIZE,BOARD_SIZE))
                 while (i+n)<=7:
                     if self.board[i+n][j] == -player:
                         flipped[i+n][j] = player
@@ -150,7 +152,7 @@ class OthelloEnv():
         n=1
         if i>=1:
             if self.board[i-n][j] == -player: 
-                flipped = np.zeros_like(self.board)
+                flipped = np.zeros((BOARD_SIZE,BOARD_SIZE))
                 while (i-n)>=0:
                     if self.board[i-n][j] == -player: 
                         flipped[i-n][j] = player
@@ -166,7 +168,7 @@ class OthelloEnv():
         n=1
         if j<=6:
             if self.board[i][j+n] == -player: 
-                flipped = np.zeros_like(self.board)
+                flipped = np.zeros((BOARD_SIZE,BOARD_SIZE))
                 while (j+n)<=7:
                     if self.board[i][j+n] == -player: 
                         flipped[i][j+n] = player
@@ -182,7 +184,7 @@ class OthelloEnv():
         n=1
         if j>=1:
             if self.board[i][j-n] == -player: 
-                flipped = np.zeros_like(self.board)
+                flipped = np.zeros((BOARD_SIZE,BOARD_SIZE))
                 while (j-n)>=0:
                     if self.board[i][j-n] == -player: 
                         flipped[i][j-n] = player
@@ -197,7 +199,7 @@ class OthelloEnv():
         n=1
         if i<=6 and j<=6:
             if self.board[i+n][j+n] == -player:
-                flipped = np.zeros_like(self.board)
+                flipped = np.zeros((BOARD_SIZE,BOARD_SIZE))
                 while(i+n<=7 and j+n<=7):
                     if self.board[i+n][j+n] == -player:
                         flipped[i+n][j+n] = player
@@ -212,7 +214,7 @@ class OthelloEnv():
         n=1
         if i<=6 and j>=0:
             if self.board[i+n][j-n] == -player:
-                flipped = np.zeros_like(self.board)
+                flipped = np.zeros((BOARD_SIZE,BOARD_SIZE))
                 while (i+n<=7 and j-n>=0):
                     if self.board[i+n][j-n] == -player:
                         flipped[i+n][j-n] = player
@@ -227,7 +229,7 @@ class OthelloEnv():
         n=1
         if i>=0 and j<=6:
             if self.board[i-n][j+n] == -player:
-                flipped = np.zeros_like(self.board)
+                flipped = np.zeros((BOARD_SIZE,BOARD_SIZE))
                 while ((i-n)>=0 and (j+n)<=7):
                     if self.board[i-n][j+n] == -player:
                         flipped[i-n][j+n] = player
@@ -242,7 +244,7 @@ class OthelloEnv():
         n=1
         if i>=0 and j>=0:
             if self.board[i-n][j-n] == -player:
-                flipped = np.zeros_like(self.board)
+                flipped = np.zeros((BOARD_SIZE,BOARD_SIZE))
                 while ((i-n)>=0 and (j-n)>=0):
                     if self.board[i-n][j-n] == -player:
                         flipped[i-n][j-n] = player
@@ -275,14 +277,6 @@ class OthelloEnv():
         #   player_loc = np.where(vector == player)
         #   opp_loc = np.where(vector == -player)
         #   if 
-
-
-    def has_legal_move(self,player):
-        moves = OthelloEnv._legal_moves(self,player)
-        if abs(np.sum(moves))>0:
-            return True
-        else:
-            return False
     
     def score_board(self):
         black_score = len(np.where(self.board==1)[0])
@@ -290,7 +284,7 @@ class OthelloEnv():
         return (black_score,white_score)
 
     def getGameOver(self):
-        if OthelloEnv.has_legal_move(self,1) or  OthelloEnv.has_legal_move(self,-1):
+        if (np.sum(OthelloEnv._legal_moves(self,1))) != 0 or  (np.sum(OthelloEnv._legal_moves(self,-1))) != 0:
             return False
         else:
             return True
