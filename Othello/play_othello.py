@@ -18,31 +18,43 @@ def decoratorTimer(decimal,func):
 def play_game(game,p1,p2):
     player = 1
     moves = []
-    while not OthelloEnv.getGameOver(game):
-        game.moves = OthelloEnv._legal_moves(game,player)
-        if player == 1:
-            move = p1.play(game,1)
+    consecutive_passes = 0
+    max_moves = 64  # Maximum possible moves in Othello
+    
+    while not game.getGameOver() and len(moves) < max_moves:
+        # Check for legal moves
+        legal_moves = game._legal_moves(player)
+        has_legal_moves = np.count_nonzero(legal_moves) > 0
+        
+        if has_legal_moves:
+            if player == 1:
+                move = p1.play(game, 1)
+            else:
+                move = p2.play(game, -1)
+            consecutive_passes = 0
         else:
-            move = p2.play(game,-1)
-        #print(move)
-        game.make_move(move,player)
+            # Player must pass
+            move = (-1, -1)
+            consecutive_passes += 1
+            
+        # If both players pass consecutively, game is over
+        if consecutive_passes >= 2:
+            break
+            
+        game.make_move(move, player)
         moves.append(move)
         player = -player
+        
     score = game.score_board()
-    #print(score)
-    game.disp_board()
-    print(game.score_board())
-    game.reset()
     return score, moves
-start = time.time()
-game = OthelloEnv()
-# p1 = RandomPlayer(game)
-# p2 = RandomPlayer(game)
-# scores = np.zeros_like(game.board)
-# score,moves = play_game(game,p1,p2)
-# print(score)
-# print(moves)
-print(game.board)
-
-end = time.time()
-print("Execution time: {}".format(end-start))
+# Example usage (uncomment to run):
+# if __name__ == "__main__":
+#     start = time.time()
+#     game = OthelloEnv()
+#     p1 = RandomPlayer(game)
+#     p2 = RandomPlayer(game)
+#     score, moves = play_game(game, p1, p2)
+#     print(f"Final score: {score}")
+#     print(f"Total moves: {len(moves)}")
+#     end = time.time()
+#     print(f"Execution time: {end-start:.3f}s")

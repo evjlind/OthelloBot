@@ -19,6 +19,8 @@ class OthelloEnv():
         self.board[3][4]=-1
         self.board[4][3]=-1
         self.board[4][4]=1
+        self.moves = np.zeros((BOARD_SIZE,BOARD_SIZE))
+        self.num_moves = 0
 
     def _legal_moves(self,player):
         board = self.board
@@ -284,10 +286,12 @@ class OthelloEnv():
         return (black_score,white_score)
 
     def getGameOver(self):
-        if (np.sum(OthelloEnv._legal_moves(self,1))) != 0 or  (np.sum(OthelloEnv._legal_moves(self,-1))) != 0:
-            return False
-        else:
-            return True
+        # Game is over when both players have no legal moves OR board is full
+        black_moves = np.count_nonzero(self._legal_moves(1))
+        white_moves = np.count_nonzero(self._legal_moves(-1))
+        board_full = np.count_nonzero(self.board == 0) == 0
+        
+        return (black_moves == 0 and white_moves == 0) or board_full
         
     def disp_board(self):
         disp = np.empty_like(self.board,dtype=str)

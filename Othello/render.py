@@ -1,3 +1,4 @@
+# Currently only works with board size = 8
 import pygame
 import numpy as np
 from othello import OthelloEnv

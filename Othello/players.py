@@ -21,8 +21,10 @@ class RandomPlayer():
         self.game = game
 
     def play(self,game,player):
-        p = np.where(game.moves == player)
-        num_moves = abs(np.sum(game.moves))
+        # Get legal moves for this player
+        legal_moves = game._legal_moves(player)
+        p = np.where(legal_moves == player)
+        num_moves = len(p[0])
         if num_moves == 0:
             return (-1,-1)
         move_ind = random.randint(0,num_moves-1)
@@ -92,7 +94,8 @@ class ab_ScoreSearch():
                 if type(n_score) is tuple:
                     n_score = n_score[0]-n_score[1]
                 value = max(value,n_score)
-                if value > b:
+                a = max(a, value)  # Update alpha
+                if value >= b:
                     break
             return value
         else:
@@ -105,7 +108,8 @@ class ab_ScoreSearch():
                 if type(n_score) is tuple:
                     n_score = n_score[0]-n_score[1]
                 value = min(value,n_score)
-                if value < a:
+                b = min(b, value)  # Update beta
+                if value <= a:
                     break
             return value
             
@@ -189,6 +193,8 @@ class HandMade():
         self.b_sqaures = 0x1800008181000018
         self.c_squares = 0x4281000000008142
         self.corners = 0x8100000000000081
+        # weights from https://courses.cs.washington.edu/courses/cse573/04au/Project/mini1/RUSSIA/miniproject1_vaishu_muthu/Paper/Final_Paper.pdf
+        self.static_weights = np.array([[4,-3,2,2,2,2,-3,4],[-3,-4,-1,-1,-1,-1,-4,-3],[2,-1,1,0,0,1,-1,2],[2,-1,0,1,1,0,-1,2],[2,-1,0,1,1,0,-1,2],[2,-1,1,0,0,1,-1,2],[-3,-4,-1,-1,-1,-1,-4,-3],[4,-3,2,2,2,2,-3,4]])
 
     # find a better definition for an endgame
     def is_endgame(self,game):
@@ -207,32 +213,45 @@ class HandMade():
                p1_value += 2**(63-i)
             if n_board[i] == -1:
                p2_value += 2**(63-i)
-        return p1_value,p2_value
+        return (p1_value,p2_value)
         
     # might not end up using this 
     def hex_to_np(hex_value):
         bin_value = bin(hex_value)
-        pass
+        arr_val = np.array(bin_value)
+        arr_val.reshape(8,8)
+        return arr_val
 
     def play(self, game, player):
         valid_moves = game._legal_moves(player)
-        
 
-    def bias_x(self,game,player):
+    def bias_x(self,board,player):
+        own_value = HandMade.board_to_ints(board)
+        if player == 1:
+            own_value = own_value[0]
+            opp_value = own_value[1]
+        else:
+            own_value = own_value[1]
+            opp_value = own_value[0]
+        my_x_squares_occupied = self.x_squares & own_value
+        opp_x_squares_occupied = self.x_squares & opp_value
+
+        return (my_x_squares_occupied, opp_x_squares_occupied)
+
+    def bias_a(self,board,player):
         pass
 
-    def bias_a(self,game,player):
+    def bias_b(self,board,player):
         pass
 
-    def bias_b(self,game,player):
-        pass
-
-    def bias_c(self,game,player):
+    def bias_c(self,board,player):
         pass
     
-    def evaluate(self,game,player):
+    def evaluate_position(self,board,player):
         pass
 
+    def find_best_move(self,board,player):
+        pass
 # class symmLR():
 #     def __init__(self,game):
 #         self.game = game
